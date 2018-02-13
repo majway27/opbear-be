@@ -1,0 +1,61 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "OPBEAR"
+  },
+  "basePath": "/test",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "responses": {},
+        "security": [
+          {
+            "OpBearCogTest": []
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "uri": {"Fn::Join": ["",
+            ["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", {"Fn::GetAtt": ["OBLambdaTest", "Arn"]},":live/invocations"]
+          ]},
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "type": "aws_proxy"
+        }
+      },
+      "post": {
+        "responses": {},
+        "security": [
+          {
+            "OpBearCogTest": []
+          }
+        ],
+        "x-amazon-apigateway-integration": {
+          "uri": {"Fn::Join": ["",
+            ["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", {"Fn::GetAtt": ["OBLambdaTest", "Arn"]},":live/invocations"]
+          ]},
+          "passthroughBehavior": "when_no_match",
+          "httpMethod": "POST",
+          "type": "aws_proxy"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "OpBearCogTest": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "x-amazon-apigateway-authtype": "cognito_user_pools",
+      "x-amazon-apigateway-authorizer": {
+        "providerARNs": [
+          "arn:aws:cognito-idp:us-west-2:943004221384:userpool/us-west-2_3O2OnecGV"
+        ],
+        "type": "cognito_user_pools"
+      }
+    }
+  }
+}

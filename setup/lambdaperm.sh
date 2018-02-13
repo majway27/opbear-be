@@ -1,0 +1,6 @@
+#!/bin/bash
+#aws lambda add-permission --function-name arn:aws:lambda:us-west-2:943004221384:function:setuplambda:live --source-arn 'arn:aws:execute-api:us-west-2:943004221384:cx94k4i1c0/*/GET/*/*/*' --principal apigateway.amazonaws.com --statement-id 7a8a52c4-f628-419a-a59e-6acd6e0c4353 --action lambda:InvokeFunction
+#aws lambda add-permission --function-name arn:aws:lambda:us-west-2:943004221384:function:setuplambda:live --source-arn 'arn:aws:execute-api:us-west-2:943004221384:cx94k4i1c0/*/*/*/*/*' --principal apigateway.amazonaws.com --statement-id 7a8a52c4-f628-419a-a59e-6acd6e0c4353 --action lambda:InvokeFunction
+#aws lambda remove-permission --function-name arn:aws:lambda:us-west-2:943004221384:function:setuplambda:live --statement-id 7a8a52c4-f628-419a-a59e-6acd6e0c4351
+#aws lambda remove-permission --function-name arn:aws:lambda:us-west-2:943004221384:function:setuplambda:live --statement-id 7a8a52c4-f628-419a-a59e-6acd6e0c4352
+aws lambda remove-permission --function-name arn:aws:lambda:us-west-2:943004221384:function:setuplambda:live --statement-id 7a8a52c4-f628-419a-a59e-6acd6e0c4353

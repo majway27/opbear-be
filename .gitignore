@@ -1,4 +1,7 @@
-reated by https://www.gitignore.io/api/python
+# AWS SAM
+.*/package.yaml
+
+created by https://www.gitignore.io/api/python
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

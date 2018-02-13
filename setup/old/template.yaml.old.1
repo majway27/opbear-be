@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: 2010-09-09
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  ListsTable:
+    Type: "AWS::DynamoDB::Table"
+      Properties:
+        AttributeDefinitions:
+        - AttributeName: uid
+          AttributeType: S
+        - AttributeName: listid
+          AttributeType: N
+        KeySchema:
+          - AttributeName: uid
+            KeyType: HASH
+          - AttributeName: listid
+            KeyType: RANGE
+  OBLists:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Timeout: 20
+      Runtime: python3.6
+      Handler: lambda_function.lambda_handler
+      Policies: AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          TABLE_NAME: 
+            Ref: ListsTable
+      Events:
+        GetLists:
+          Type: Api
+          Properties:
+            Path: /
+            Method: get
+        CreateList:
+          Type: Api
+          Properties:
+            Path: /
+            Method: post
