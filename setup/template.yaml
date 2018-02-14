@@ -60,7 +60,7 @@ Resources:
           AttributeType: "S"
         - 
           AttributeName: "listid"
-          AttributeType: "N"
+          AttributeType: "S"
       KeySchema: 
         - 
           AttributeName: "uid"

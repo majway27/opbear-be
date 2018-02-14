@@ -172,7 +172,7 @@ Resources:
     Type: AWS::ApiGateway::Deployment
   OBLambdaSetup:
     Properties:
-      CodeUri: s3://opbearbe-deploy/eeb18aae80099de7c55f24622bbdd041
+      CodeUri: s3://opbearbe-deploy/7781ff291a65bb831ebf3d327b30e7ab
       Environment:
         Variables:
           TABLE_NAME:
@@ -241,7 +241,7 @@ Resources:
       - AttributeName: uid
         AttributeType: S
       - AttributeName: listid
-        AttributeType: N
+        AttributeType: S
       KeySchema:
       - AttributeName: uid
         KeyType: HASH
