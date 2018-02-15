@@ -67,11 +67,29 @@ def lambda_handler(event, context):
                 Item={
                     #'uid': 'bad0b9bb-6af8-4abc-b5ba-1a323733ee45',
                     'uid': userid,
-                    'listid': str(uuid.uuid4()),
+                    #'listid': str(uuid.uuid4()),
+                    'listid': body['listid'],
                     'name': body['name'],
                     'longDescription': body['longDescription'],
                     'status': "active"
                 }
+            )
+        except ClientError as e:
+            print(e.response['Error']['Message'])
+        else:
+            return response_builder('[{"result":"success"}]', 200)
+
+    elif event['httpMethod'] == 'DELETE':
+        try:
+            body = json.loads(event['body'])
+        except:
+            return {'statusCode': 400, 'body': 'malformed json input'}        
+        try:
+            response = table.delete_item(
+                Key={
+                    'uid': userid,
+                    'listid': body[0]['listid']
+                },
             )
         except ClientError as e:
             print(e.response['Error']['Message'])
