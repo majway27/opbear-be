@@ -80,16 +80,39 @@ def lambda_handler(event, context):
             return response_builder('[{"result":"success"}]', 200)
 
     elif event['httpMethod'] == 'DELETE':
+        print(event['pathParameters']['listid'])
+        try:
+            response = table.delete_item(
+                Key={
+                    'uid': userid,
+                    'listid': event['pathParameters']['listid']
+                },
+            )
+        except ClientError as e:
+            print(e.response['Error']['Message'])
+        else:
+            return response_builder('[{"result":"success"}]', 200)
+            
+    elif event['httpMethod'] == 'PUT':
+        print(event)
         try:
             body = json.loads(event['body'])
         except:
             return {'statusCode': 400, 'body': 'malformed json input'}        
         try:
-            response = table.delete_item(
+            response = table.update_item(
                 Key={
                     'uid': userid,
-                    'listid': body[0]['listid']
+                    'listid': event['pathParameters']['listid']
                 },
+                UpdateExpression="set #listname = :n, longDescription =:l, #liststatus =:s",
+                ExpressionAttributeNames = {"#listname":"name", "#liststatus":"status"},
+                ExpressionAttributeValues={
+                    ':n': body[0]['name'],
+                    ':l': body[0]['longDescription'],
+                    ':s': body[0]['status']
+                },
+                ReturnValues="UPDATED_NEW"
             )
         except ClientError as e:
             print(e.response['Error']['Message'])
