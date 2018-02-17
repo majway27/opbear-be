@@ -23,39 +23,67 @@ def response_builder(message, status_code):
     }
     
 def query_table(filter_key=None, filter_value=None):
-    """
-    Perform a query operation on the table. Can specify filter_key (col name) and its value to be filtered. Returns the response.
-    """
     if filter_key and filter_value:
         filtering_exp = Key(filter_key).eq(filter_value)
         response = table.query(KeyConditionExpression=filtering_exp)
         return response
-    else: print("oops") 
-    #return response_builder("Bad Robot", 400)
+    else: 
+        print("Error: Missing Query Values") 
+        return response_builder("Bad Robot", 400)
+
+def query_table_item(userid, listid):
+    if userid and listid:
+        print("Getting item: " + str(listid))
+        response = table.get_item(
+                    Key={
+                        'uid': userid,
+                        'listid': listid
+                    },
+        )
+        return response
+    else: 
+        print("Error: Missing Query Values") 
+        return response_builder("Error: Missing Query Values", 400)
 
 def lambda_handler(event, context):
     userid = event['requestContext']['authorizer']['claims']['sub']
     #print(userid)
     
     if event['httpMethod'] == 'GET':
-        response_list = []
-        response_json = ""
-        try:
-            resp = query_table("uid",userid)
-            
-            for item in resp['Items']:
-                data = {}
-                data["uid"] = item["uid"]
-                data['listid'] = str(item['listid'])
-                data['name'] = item['name']
-                data['longDescription'] = item['longDescription']
-                data['status'] = item['status']
-                response_list.append(data)
-            json_data = json.dumps(response_list)
-            return response_builder(json_data, 200)
-        except Exception as e:
-            print(e)
-            return response_builder("Bad Robot", 400)
+        if (event['pathParameters'] is not None):
+            # Get single list
+            data = {}
+            try:
+                resp = query_table_item(userid,event['pathParameters']['listid'])
+                data['uid'] = resp['Item']['uid']
+                data['listid'] = resp['Item']['listid']
+                data['name'] = resp['Item']['name']
+                data['longDescription'] = resp['Item']['longDescription']
+                data['status'] = resp['Item']['status']
+                data['listitems'] = resp['Item']['listitems']
+                return response_builder(json.dumps(data), 200)
+            except Exception as e:
+                print(e)
+                return response_builder("Bad Robot", 400)
+        else:
+            # Get all lists for user
+            response_list = []
+            response_json = ""
+            try:
+                resp = query_table("uid",userid)
+                for item in resp['Items']:
+                    data = {}
+                    data["uid"] = item["uid"]
+                    data['listid'] = str(item['listid'])
+                    data['name'] = item['name']
+                    data['longDescription'] = item['longDescription']
+                    data['status'] = item['status']
+                    response_list.append(data)
+                json_data = json.dumps(response_list)
+                return response_builder(json_data, 200)
+            except Exception as e:
+                print(e)
+                return response_builder("Bad Robot", 400)
     
     elif event['httpMethod'] == 'POST':
         try:
@@ -65,13 +93,12 @@ def lambda_handler(event, context):
         try:
             response = table.put_item(
                 Item={
-                    #'uid': 'bad0b9bb-6af8-4abc-b5ba-1a323733ee45',
                     'uid': userid,
-                    #'listid': str(uuid.uuid4()),
                     'listid': body['listid'],
                     'name': body['name'],
                     'longDescription': body['longDescription'],
-                    'status': "active"
+                    'status': "active",
+                    'listitems': body['listitems']
                 }
             )
         except ClientError as e:
@@ -105,12 +132,13 @@ def lambda_handler(event, context):
                     'uid': userid,
                     'listid': event['pathParameters']['listid']
                 },
-                UpdateExpression="set #listname = :n, longDescription =:l, #liststatus =:s",
+                UpdateExpression="set #listname = :n, longDescription =:l, #liststatus =:s, listitems =:i",
                 ExpressionAttributeNames = {"#listname":"name", "#liststatus":"status"},
                 ExpressionAttributeValues={
                     ':n': body[0]['name'],
                     ':l': body[0]['longDescription'],
-                    ':s': body[0]['status']
+                    ':s': body[0]['status'],
+                    ':i': body[0]['listitems']
                 },
                 ReturnValues="UPDATED_NEW"
             )
