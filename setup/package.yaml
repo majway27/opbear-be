@@ -2,7 +2,6 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: Optimistic Bearings Application
 Globals:
   Function:
-    AutoPublishAlias: live
     Environment:
       Variables:
         DeployBucket: opbearbe-deploy
@@ -32,9 +31,9 @@ Outputs:
     Value:
       Ref: OBCognitoUserPoolClient
   DDB:
-    Description: DynamoDB Table
+    Description: DynamoDB Test Table
     Value:
-      Ref: OBListsTable
+      Ref: OBListsTableTest
   LamdbaFunction:
     Description: Lambda Function
     Value:
@@ -53,6 +52,12 @@ Parameters:
     - setuplambda
     Default: setuplambda
     Description: Lambda Name
+    Type: String
+  LambdaFunctionProdVersionValue:
+    Default: $LATEST
+    Description: Lambda Prod Version "Number".  Used in CF template to point lambda
+      version, manage env specific env vars.  Typed as string to allow for special
+      "$LATEST" version.
     Type: String
 Resources:
   OBApi:
@@ -181,11 +186,11 @@ Resources:
     Type: AWS::ApiGateway::Deployment
   OBLambdaSetup:
     Properties:
-      CodeUri: s3://opbearbe-deploy/c11203292eca2056422f7d6805c0f99e
+      CodeUri: s3://opbearbe-deploy/98a4f79d33b933b9b7bb2e855244f18d
       Environment:
         Variables:
           TABLE_NAME:
-            Ref: OBListsTable
+            Ref: OBListsTableProd
       Events:
         ProxyApiProdDelete:
           Properties:
@@ -255,10 +260,17 @@ Resources:
       Description: Prod Lambda Version Link
       FunctionName:
         Ref: OBLambdaSetup
-      FunctionVersion: $LATEST
+      FunctionVersion:
+        Ref: LambdaFunctionProdVersionValue
       Name: prod
     Type: AWS::Lambda::Alias
-  OBListsTable:
+  OBLambdaVersionRolling:
+    Properties:
+      Description: Rolling Version For Dev Promotion
+      FunctionName:
+        Ref: OBLambdaSetup
+    Type: AWS::Lambda::Version
+  OBListsTableProd:
     Properties:
       AttributeDefinitions:
       - AttributeName: uid
@@ -273,7 +285,24 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: '1'
         WriteCapacityUnits: '1'
-      TableName: test.ob.lists
+      TableName: prod.2.ob.lists
+    Type: AWS::DynamoDB::Table
+  OBListsTableTest:
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: uid
+        AttributeType: S
+      - AttributeName: listid
+        AttributeType: S
+      KeySchema:
+      - AttributeName: uid
+        KeyType: HASH
+      - AttributeName: listid
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: '1'
+        WriteCapacityUnits: '1'
+      TableName: test.2.ob.lists
     Type: AWS::DynamoDB::Table
   OBStageV2:
     Properties:

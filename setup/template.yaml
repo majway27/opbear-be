@@ -7,8 +7,7 @@ Globals:
     Timeout: 20
     Environment:
       Variables:    
-         DeployBucket: opbearbe-deploy
-    AutoPublishAlias: live
+        DeployBucket: opbearbe-deploy
 Parameters: 
   LambdaFunctionNameValue: 
     Type: String
@@ -16,6 +15,10 @@ Parameters:
     AllowedValues: 
       - setuplambda
     Description: Lambda Name
+  LambdaFunctionProdVersionValue: 
+    Type: String
+    Default: $LATEST
+    Description: Lambda Prod Version "Number".  Used in CF template to point lambda version, manage env specific env vars.  Typed as string to allow for special "$LATEST" version.
 Resources:
   OBCognitoUserPool:
     Type: "AWS::Cognito::UserPool"
@@ -51,7 +54,7 @@ Resources:
           ClientId: !Ref OBCognitoUserPoolClient
           ProviderName: !GetAtt OBCognitoUserPool.ProviderName
       AllowUnauthenticatedIdentities: false
-  OBListsTable: 
+  OBListsTableTest: 
     Type: "AWS::DynamoDB::Table"
     Properties: 
       AttributeDefinitions: 
@@ -71,7 +74,28 @@ Resources:
       ProvisionedThroughput: 
         ReadCapacityUnits: "1"
         WriteCapacityUnits: "1"
-      TableName: "test.ob.lists"
+      TableName: "test.2.ob.lists"
+  OBListsTableProd: 
+    Type: "AWS::DynamoDB::Table"
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "uid"
+          AttributeType: "S"
+        - 
+          AttributeName: "listid"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "uid"
+          KeyType: "HASH"
+        - 
+          AttributeName: "listid"
+          KeyType: "RANGE"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "1"
+        WriteCapacityUnits: "1"
+      TableName: "prod.2.ob.lists"
   OBLambdaSetup:
     Type: AWS::Serverless::Function
     Properties:
@@ -80,7 +104,7 @@ Resources:
       FunctionName: !Ref LambdaFunctionNameValue
       Environment:
         Variables:
-          TABLE_NAME: !Ref OBListsTable
+          TABLE_NAME: !Ref OBListsTableProd
       Events:
         ProxyApiTestGet:
           Type: Api
@@ -124,13 +148,18 @@ Resources:
             Method: DELETE
             RestApiId: 
               !Ref OBApi
+  OBLambdaVersionRolling:
+    Type: "AWS::Lambda::Version"
+    Properties:     
+      Description : Rolling Version For Dev Promotion         
+      FunctionName : !Ref OBLambdaSetup
   OBLambdaSetupProdAlias:
     Type: "AWS::Lambda::Alias"
     Properties:     
       Description: Prod Lambda Version Link         
       FunctionName: !Ref OBLambdaSetup
-      #FunctionVersion: '$LATEST' - for first deploy otherwise deploy will fail for missing version. 
-      FunctionVersion: '$LATEST'
+      #FunctionVersion: '$LATEST' via cf param default value.  For first deploy otherwise deploy will fail for missing version.
+      FunctionVersion: !Ref LambdaFunctionProdVersionValue
       Name: prod
   OBApi:
     Type: AWS::Serverless::Api
@@ -245,5 +274,5 @@ Outputs:
     Description: Cognito Identity Pool IAM Authed Role
     Value: !Ref OBCognitoIdPoolAuthedRole
   DDB:
-    Description: DynamoDB Table
-    Value: !Ref OBListsTable
+    Description: DynamoDB Test Table
+    Value: !Ref OBListsTableTest

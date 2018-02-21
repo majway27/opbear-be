@@ -237,7 +237,7 @@
           }
         ],
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:943004221384:function:setuplambda:live/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:943004221384:function:setuplambda/invocations",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
           "type": "aws_proxy"
@@ -251,7 +251,7 @@
           }
         ],
         "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:943004221384:function:setuplambda:live/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:943004221384:function:setuplambda/invocations",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
           "type": "aws_proxy"
@@ -321,7 +321,7 @@
               "statusCode": "200"
             }
           },
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:943004221384:function:setuplambda:live/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:943004221384:function:setuplambda/invocations",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
           "contentHandling": "CONVERT_TO_TEXT",
@@ -352,7 +352,7 @@
               "statusCode": "200"
             }
           },
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:943004221384:function:setuplambda:live/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:943004221384:function:setuplambda/invocations",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
           "contentHandling": "CONVERT_TO_TEXT",
@@ -383,7 +383,7 @@
               "statusCode": "200"
             }
           },
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:943004221384:function:setuplambda:live/invocations",
+          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:943004221384:function:setuplambda/invocations",
           "passthroughBehavior": "when_no_match",
           "httpMethod": "POST",
           "contentHandling": "CONVERT_TO_TEXT",

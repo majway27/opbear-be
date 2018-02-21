@@ -121,27 +121,46 @@ def lambda_handler(event, context):
             return response_builder('[{"result":"success"}]', 200)
             
     elif event['httpMethod'] == 'PUT':
+        print("Starting PUT")
         print(event)
         try:
             body = json.loads(event['body'])
         except:
             return {'statusCode': 400, 'body': 'malformed json input'}        
         try:
-            response = table.update_item(
-                Key={
-                    'uid': userid,
-                    'listid': event['pathParameters']['listid']
-                },
-                UpdateExpression="set #listname = :n, longDescription =:l, #liststatus =:s, listitems =:i",
-                ExpressionAttributeNames = {"#listname":"name", "#liststatus":"status"},
-                ExpressionAttributeValues={
-                    ':n': body[0]['name'],
-                    ':l': body[0]['longDescription'],
-                    ':s': body[0]['status'],
-                    ':i': body[0]['listitems']
-                },
-                ReturnValues="UPDATED_NEW"
-            )
+            if (body.get("listitems")):
+                print("Starting PUT, With Listitems")
+                response = table.update_item(
+                    Key={
+                        'uid': userid,
+                        'listid': event['pathParameters']['listid']
+                    },
+                    UpdateExpression="set #listname = :n, longDescription =:l, #liststatus =:s, listitems =:i",
+                    ExpressionAttributeNames = {"#listname":"name", "#liststatus":"status"},
+                    ExpressionAttributeValues={
+                        ':n': body['name'],
+                        ':l': body['longDescription'],
+                        ':s': body['status'],
+                        ':i': body['listitems']
+                    },
+                    ReturnValues="UPDATED_NEW"
+                )
+            else:
+                print("Starting PUT, No Listitems")
+                response = table.update_item(
+                    Key={
+                        'uid': userid,
+                        'listid': event['pathParameters']['listid']
+                    },
+                    UpdateExpression="set #listname = :n, longDescription =:l, #liststatus =:s",
+                    ExpressionAttributeNames = {"#listname":"name", "#liststatus":"status"},
+                    ExpressionAttributeValues={
+                        ':n': body['name'],
+                        ':l': body['longDescription'],
+                        ':s': body['status']
+                    },
+                    ReturnValues="UPDATED_NEW"
+                )
         except ClientError as e:
             print(e.response['Error']['Message'])
         else:
