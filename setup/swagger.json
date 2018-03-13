@@ -39,20 +39,6 @@
           "type": "aws_proxy"
         }
       },
-      "delete": {
-        "responses": {},
-        "security": [
-          {
-            "OpBearCog": []
-          }
-        ],
-        "x-amazon-apigateway-integration": {
-          "uri": "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:943004221384:function:setuplambda:prod/invocations",
-          "passthroughBehavior": "when_no_match",
-          "httpMethod": "POST",
-          "type": "aws_proxy"
-        }
-      },
       "options": {
         "consumes": [
           "application/json"

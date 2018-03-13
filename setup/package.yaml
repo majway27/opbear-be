@@ -186,48 +186,76 @@ Resources:
     Type: AWS::ApiGateway::Deployment
   OBLambdaSetup:
     Properties:
-      CodeUri: s3://opbearbe-deploy/98a4f79d33b933b9b7bb2e855244f18d
+      CodeUri: s3://opbearbe-deploy/9f755178656df1ac90f83dc120539bd3
       Environment:
         Variables:
           TABLE_NAME:
             Ref: OBListsTableProd
       Events:
-        ProxyApiProdDelete:
+        ProxyApiProdSetupListByIdDelete:
           Properties:
             Method: DELETE
-            Path: /setup/list
+            Path: /setup/list/{listid}
             RestApiId:
               Ref: OBApi
           Type: Api
-        ProxyApiProdGet:
+        ProxyApiProdSetupListByIdGet:
+          Properties:
+            Method: GET
+            Path: /setup/list/{listid}
+            RestApiId:
+              Ref: OBApi
+          Type: Api
+        ProxyApiProdSetupListByIdPut:
+          Properties:
+            Method: PUT
+            Path: /setup/list/{listid}
+            RestApiId:
+              Ref: OBApi
+          Type: Api
+        ProxyApiProdSetupListGet:
           Properties:
             Method: GET
             Path: /setup/list
             RestApiId:
               Ref: OBApi
           Type: Api
-        ProxyApiProdPost:
+        ProxyApiProdSetupListPost:
           Properties:
             Method: POST
             Path: /setup/list
             RestApiId:
               Ref: OBApi
           Type: Api
-        ProxyApiTestDelete:
+        ProxyApiTestSetupListByIdDelete:
           Properties:
             Method: DELETE
-            Path: /test/setup/list
+            Path: /test/setup/list/{listid}
             RestApiId:
               Ref: OBApi
           Type: Api
-        ProxyApiTestGet:
+        ProxyApiTestSetupListByIdGet:
+          Properties:
+            Method: GET
+            Path: /test/setup/list/{listid}
+            RestApiId:
+              Ref: OBApi
+          Type: Api
+        ProxyApiTestSetupListByIdPut:
+          Properties:
+            Method: PUT
+            Path: /test/setup/list/{listid}
+            RestApiId:
+              Ref: OBApi
+          Type: Api
+        ProxyApiTestSetupListGet:
           Properties:
             Method: GET
             Path: /test/setup/list
             RestApiId:
               Ref: OBApi
           Type: Api
-        ProxyApiTestPost:
+        ProxyApiTestSetupListPost:
           Properties:
             Method: POST
             Path: /test/setup/list
