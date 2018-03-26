@@ -46,9 +46,8 @@ def query_table_item(userid, listid):
         return response_builder("Error: Missing Query Values", 400)
 
 def lambda_handler(event, context):
-    userid = event['requestContext']['authorizer']['claims']['sub']
-    #print(userid)
-    
+    userid = event['requestContext']['identity']['cognitoAuthenticationProvider']
+
     if event['httpMethod'] == 'GET':
         if (event['pathParameters'] is not None):
             # Get single list

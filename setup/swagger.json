@@ -15,7 +15,7 @@
         "responses": {},
         "security": [
           {
-            "OpBearCog": []
+            "sigv4": []
           }
         ],
         "x-amazon-apigateway-integration": {
@@ -29,7 +29,7 @@
         "responses": {},
         "security": [
           {
-            "OpBearCog": []
+            "sigv4": []
           }
         ],
         "x-amazon-apigateway-integration": {
@@ -94,7 +94,7 @@
         "responses": {},
         "security": [
           {
-            "OpBearCog": []
+            "sigv4": []
           }
         ],
         "x-amazon-apigateway-integration": {
@@ -125,7 +125,7 @@
         "responses": {},
         "security": [
           {
-            "OpBearCog": []
+            "sigv4": []
           }
         ],        
         "x-amazon-apigateway-integration": {
@@ -156,7 +156,7 @@
         "responses": {},
         "security": [
           {
-            "OpBearCog": []
+            "sigv4": []
           }
         ],
         "x-amazon-apigateway-integration": {
@@ -219,7 +219,7 @@
         "responses": {},
         "security": [
           {
-            "OpBearCog": []
+            "sigv4": []
           }
         ],
         "x-amazon-apigateway-integration": {
@@ -233,7 +233,7 @@
         "responses": {},
         "security": [
           {
-            "OpBearCog": []
+            "sigv4": []
           }
         ],
         "x-amazon-apigateway-integration": {
@@ -298,7 +298,7 @@
         "responses": {},
         "security": [
           {
-            "OpBearCog": []
+            "sigv4": []
           }
         ],
         "x-amazon-apigateway-integration": {
@@ -329,7 +329,7 @@
         "responses": {},
         "security": [
           {
-            "OpBearCog": []
+            "sigv4": []
           }
         ],
         "x-amazon-apigateway-integration": {
@@ -360,7 +360,7 @@
         "responses": {},
         "security": [
           {
-            "OpBearCog": []
+            "sigv4": []
           }
         ],
         "x-amazon-apigateway-integration": {
@@ -420,17 +420,11 @@
     }
   },
   "securityDefinitions": {
-    "OpBearCog": {
+    "sigv4": {
       "type": "apiKey",
       "name": "Authorization",
       "in": "header",
-      "x-amazon-apigateway-authtype": "cognito_user_pools",
-      "x-amazon-apigateway-authorizer": {
-        "providerARNs": [
-          "arn:aws:cognito-idp:us-west-2:943004221384:userpool/us-west-2_0ow0b3Izn"
-        ],
-        "type": "cognito_user_pools"
-      }
+      "x-amazon-apigateway-authtype": "awsSigv4"
     }
   }
 }

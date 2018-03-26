@@ -186,7 +186,7 @@ Resources:
     Type: AWS::ApiGateway::Deployment
   OBLambdaSetup:
     Properties:
-      CodeUri: s3://opbearbe-deploy/9f755178656df1ac90f83dc120539bd3
+      CodeUri: s3://opbearbe-deploy/72bb0d375e02fad51dc73f27a4bf48c1
       Environment:
         Variables:
           TABLE_NAME:
